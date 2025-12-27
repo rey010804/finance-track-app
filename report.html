@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceTrack - Laporan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>FinanceTrack</h1>
+            <nav>
+                <a href="index.html">Dashboard</a>
+                <a href="transactions.html">Transaksi</a>
+                <a href="categories.html">Kategori</a>
+                <a href="report.html" class="active">Laporan</a>
+                <a href="profile.html">Profil</a>
+                <button class="btn" onclick="Auth.logout()">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Laporan Keuangan</h2>
+        <div class="card">
+            <canvas id="reportChart" height="300"></canvas>
+        </div>
+        <button class="btn" onclick="Reports.exportCSV()">Export ke CSV</button>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/report.js"></script>
+    <script>
+        if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+        Reports.init();
+    </script>
+</body>
+</html>

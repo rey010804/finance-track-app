@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceTrack - Daftar Akun</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="auth-page">
+    <div class="container" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+        <div class="card" style="max-width: 460px; width: 100%; text-align: center;">
+            <i class="fas fa-user-plus" style="font-size: 80px; color: #4361ee; margin-bottom: 20px;"></i>
+            <h2 style="margin-bottom: 10px; font-size: 28px;">Buat Akun Baru</h2>
+            <p style="color: #718096; margin-bottom: 30px;">Mulai kelola keuangan Anda dengan lebih baik hari ini</p>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Nama Lengkap" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="regEmail" placeholder="Email Anda" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regPassword" placeholder="Password (min. 6 karakter)" required minlength="6">
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 20px; padding: 14px;">
+                    <i class="fas fa-user-plus"></i> Daftar Sekarang
+                </button>
+            </form>
+
+            <p style="margin-top: 25px; color: #718096;">
+                Sudah punya akun? <a href="login.html" style="color: #4361ee; font-weight: 600;">Masuk di sini</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (name.length < 3 || password.length < 6) {
+                Utils.showToast('Data tidak valid. Pastikan nama & password lengkap', 'error');
+                return;
+            }
+
+            if (Auth.register(name, email, password)) {
+                Utils.showToast('Akun berhasil dibuat! Silakan login 😊', 'success');
+                setTimeout(() => window.location.href = 'login.html', 1200);
+            }
+        });
+    </script>
+</body>
+</html>

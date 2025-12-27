@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceTrack - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-wallet"></i> FinanceTrack</h1>
+            <nav>
+                <a href="index.html" class="active"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transaksi</a>
+                <a href="categories.html"><i class="fas fa-tags"></i> Kategori</a>
+                <a href="report.html"><i class="fas fa-chart-pie"></i> Laporan</a>
+                <a href="profile.html"><i class="fas fa-user"></i> Profil</a>
+                <button class="btn btn-danger" onclick="Auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card" style="text-align: center;">
+            <h2>Selamat datang kembali, <strong id="userName" style="color: #4361ee;"></strong>! 👋</h2>
+            <h1 id="balance" style="font-size: 42px; margin: 30px 0; color: #4361ee;">Rp 0</h1>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fas fa-chart-line"></i> Grafik Bulanan</h3>
+                <canvas id="dashboardChart" height="220"></canvas>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-plus-circle"></i> Tambah Transaksi Cepat</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+                    <input type="text" id="quickDesc" placeholder="Deskripsi">
+                    <input type="number" id="quickAmount" placeholder="Jumlah (Rp)">
+                    <select id="quickType">
+                        <option value="income">Pemasukan</option>
+                        <option value="expense">Pengeluaran</option>
+                    </select>
+                    <select id="quickCategory"></select>
+                </div>
+                <button class="btn" onclick="quickAdd()" style="width: 100%; margin-top: 15px;">
+                    <i class="fas fa-check"></i> Tambah Transaksi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/transactions.js"></script>
+    <script src="js/categories.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+
+        document.getElementById('userName').textContent = Auth.getUser().name;
+
+        // Isi kategori
+        const catSelect = document.getElementById('quickCategory');
+        Categories.getAll().forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            catSelect.appendChild(opt);
+        });
+
+        function quickAdd() {
+            const desc = document.getElementById('quickDesc').value.trim();
+            const amount = document.getElementById('quickAmount').value;
+            const type = document.getElementById('quickType').value;
+            const cat = document.getElementById('quickCategory').value || 'Umum';
+
+            if (!desc || !amount) {
+                Utils.showToast('Deskripsi dan jumlah wajib diisi', 'error');
+                return;
+            }
+
+            Transactions.add(desc, amount, cat, type);
+            Dashboard.init();
+            Utils.showToast('Transaksi ditambahkan! 🎉', 'success');
+
+            document.getElementById('quickDesc').value = '';
+            document.getElementById('quickAmount').value = '';
+        }
+
+        Dashboard.init();
+    </script>
+</body>
+</html>

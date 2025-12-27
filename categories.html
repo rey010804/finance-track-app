@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceTrack - Kategori</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>FinanceTrack</h1>
+            <nav>
+                <a href="index.html">Dashboard</a>
+                <a href="transactions.html">Transaksi</a>
+                <a href="categories.html" class="active">Kategori</a>
+                <a href="report.html">Laporan</a>
+                <a href="profile.html">Profil</a>
+                <button class="btn" onclick="Auth.logout()">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Kategori</h2>
+        <button class="btn" onclick="showAddCatModal()">+ Tambah Kategori</button>
+
+        <table id="catTable">
+            <thead>
+                <tr>
+                    <th>Nama Kategori</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Modal Tambah Kategori -->
+    <div class="modal" id="addCatModal">
+        <div class="modal-content">
+            <h3>Tambah Kategori Baru</h3>
+            <input type="text" id="newCatName" placeholder="Nama kategori">
+            <button class="btn-primary" onclick="addCategory()">Simpan</button>
+            <button onclick="closeModal('addCatModal')">Batal</button>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/categories.js"></script>
+    <script>
+        if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+        Categories.init();
+
+        function showAddCatModal() {
+            document.getElementById('addCatModal').style.display = 'flex';
+        }
+
+        function addCategory() {
+            const name = document.getElementById('newCatName').value.trim();
+            if (name) {
+                Categories.add(name);
+                closeModal('addCatModal');
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+    </script>
+</body>
+</html>

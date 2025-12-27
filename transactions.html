@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceTrack - Transaksi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-wallet"></i> FinanceTrack</h1>
+            <nav>
+                <a href="index.html">Dashboard</a>
+                <a href="transactions.html" class="active">Transaksi</a>
+                <a href="categories.html">Kategori</a>
+                <a href="report.html">Laporan</a>
+                <a href="profile.html">Profil</a>
+                <button class="btn btn-danger" onclick="Auth.logout()">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2><i class="fas fa-exchange-alt"></i> Daftar Transaksi</h2>
+            <button class="btn" onclick="showAddModal()">
+                <i class="fas fa-plus"></i> Tambah Transaksi
+            </button>
+        </div>
+
+        <div class="card">
+            <table id="transTable">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Deskripsi</th>
+                        <th>Kategori</th>
+                        <th>Jumlah</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Tambah -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-plus-circle"></i> Tambah Transaksi Baru</h3>
+            <form id="addTransForm">
+                <div class="form-group">
+                    <label>Tanggal</label>
+                    <input type="date" id="transDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <input type="text" id="transDesc" required>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah</label>
+                    <input type="number" id="transAmount" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Tipe</label>
+                    <select id="transType">
+                        <option value="income">Pemasukan</option>
+                        <option value="expense">Pengeluaran</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="transCat"></select>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn">Simpan</button>
+                    <button type="button" class="btn" onclick="closeModal('addModal')" style="background: #95a5a6;">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/transactions.js"></script>
+    <script src="js/categories.js"></script>
+    <script>
+        if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+
+        Transactions.init();
+
+        const catSelect = document.getElementById('transCat');
+        Categories.getAll().forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            catSelect.appendChild(opt);
+        });
+
+        document.getElementById('transDate').valueAsDate = new Date();
+
+        document.getElementById('addTransForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const date = document.getElementById('transDate').value;
+            const desc = document.getElementById('transDesc').value;
+            const amount = document.getElementById('transAmount').value;
+            const type = document.getElementById('transType').value;
+            const cat = document.getElementById('transCat').value;
+
+            Transactions.add(desc, amount, cat, type, date);
+            closeModal('addModal');
+        });
+
+        function showAddModal() {
+            document.getElementById('addModal').style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
